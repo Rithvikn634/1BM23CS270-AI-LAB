@@ -1,0 +1,84 @@
+Initialize board as array of 9 empty spaces
+
+FUNCTION printBoard():
+    Print board positions in 3x3 grid
+
+FUNCTION checkWin(player):
+    FOR each winning combination (rows, columns, diagonals):
+        IF all three positions belong to player:
+            RETURN True
+    RETURN False
+
+FUNCTION checkDraw():
+    IF no empty spaces left on board:
+        RETURN True
+    ELSE:
+        RETURN False
+
+FUNCTION minimax(isMaximizing):
+    IF checkWin('X'):
+        RETURN +1        // Bot wins
+    IF checkWin('O'):
+        RETURN -1        // Player wins
+    IF checkDraw():
+        RETURN 0         // Draw
+
+    IF isMaximizing:     // Bot's turn
+        bestScore = -infinity
+        FOR each empty cell in board:
+            Place 'X' in cell
+            score = minimax(False)   // Next is player's turn
+            Remove 'X' from cell
+            bestScore = max(score, bestScore)
+        RETURN bestScore
+    ELSE:                // Player's turn
+        bestScore = +infinity
+        FOR each empty cell in board:
+            Place 'O' in cell
+            score = minimax(True)    // Next is bot's turn
+            Remove 'O' from cell
+            bestScore = min(score, bestScore)
+        RETURN bestScore
+
+FUNCTION computerMove():
+    bestScore = -infinity
+    bestMove = -1
+    FOR each empty cell in board:
+        Place 'X' in cell
+        score = minimax(False)   // Player moves next
+        Remove 'X' from cell
+        IF score > bestScore:
+            bestScore = score
+            bestMove = cell
+    Place 'X' in bestMove
+
+FUNCTION playerMove():
+    REPEAT:
+        Prompt user for position (1-9)
+        IF position is valid AND empty:
+            Place 'O' in position
+            BREAK
+        ELSE:
+            Print "Invalid or taken position, try again."
+
+MAIN LOOP:
+    Print initial empty board
+
+    WHILE True:
+        computerMove()
+        Print board
+        IF checkWin('X'):
+            Print "Bot wins!"
+            BREAK
+        IF checkDraw():
+            Print "It's a draw!"
+            BREAK
+
+        playerMove()
+        Print board
+        IF checkWin('O'):
+            Print "You win!"
+            BREAK
+        IF checkDraw():
+            Print "It's a draw!"
+            BREAK
